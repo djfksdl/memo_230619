@@ -46,24 +46,24 @@ $(document).ready(function() {
 			return false;
 		} 
 		
-		//AJAX
+		// AJAX
 		// form url, params
 		let url = $(this).attr('action');
 		console.log(url);
-		let params = $(this).serialize(); // name속성 반드시 있어야함
+		let params = $(this).serialize();  // name 속성 반드시 있어야 함
 		console.log(params);
 		
-		$.post(url,parms) //request
-		.done(function(data)){// response
-			if(data.code == 200){
+		$.post(url, params) // request
+		.done(function(data) { // response
+			if (data.code == 200) {
 				// 성공
 				// 글 목록으로 이동
-				locaation.href = "/post/post-list-view";
-			}else{
-				//로직 상 실패
-				alert(datta.errorMessage);
+				location.href = "/post/post-list-view";
+			} else {
+				// 로직 상 실패
+				alert(data.errorMessage);
 			}
-		}
+		});
 	});
 });
 </script>

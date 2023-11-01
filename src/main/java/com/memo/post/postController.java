@@ -15,23 +15,24 @@ import com.memo.post.domain.Post;
 
 @RequestMapping("/post")
 @Controller
-public class postController {
+public class PostController {
 	
 	@Autowired
 	private PostBO postBO;
-	
+
 	@GetMapping("/post-list-view")
-	public String postListView(Model model , HttpSession session) {
-		Integer userId = (Integer)session.getAttribute("userId"); //null 가능하게 int말고 Integer로 받아야함.
-		if(userId == null) {
-			//비로그인이면 로그인 화면으로 이동
+	public String postListView(Model model, HttpSession session) {
+		// 로그인 여부 조회
+		Integer userId = (Integer)session.getAttribute("userId");
+		if (userId == null) {
+			// 비로그인이면 로그인 화면으로 이동
 			return "redirect:/user/sign-in-view";
 		}
 		
 		List<Post> postList = postBO.getPostListByUserId(userId);
 		
 		model.addAttribute("postList", postList);
-		model.addAttribute("viewName","post/postList");
+		model.addAttribute("viewName", "post/postList");
 		return "template/layout";
 	}
 }

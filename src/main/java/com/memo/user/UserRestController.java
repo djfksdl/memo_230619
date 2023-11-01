@@ -1,7 +1,5 @@
 package com.memo.user;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,6 +48,7 @@ public class UserRestController {
 		}
 		return result;
 	}
+	
 	/**
 	 * 회원가입 API
 	 * @param loginId
@@ -66,23 +65,26 @@ public class UserRestController {
 			@RequestParam("email") String email) {
 		
 		// password 해싱 - md5 알고리즘
-		// aaaa => 74d8733745420d33f80c4663dc5e5
+		// aaaa => 74b8733745420d4d33f80c4663dc5e5
+		// aaaa => 74b8733745420d4d33f80c4663dc5e5
 		String hashedPassword = EncryptUtils.md5(password);
 		
 		// DB insert
-		Integer id = userBO.addUser(loginId, hashedPassword , name, email);
+		Integer id = userBO.addUser(loginId, hashedPassword, name, email);
 		
 		// 응답값
 		Map<String, Object> result = new HashMap<>();
-		if(id == null) {
+		if (id == null) {
 			result.put("code", 500);
-			result.put("errorMessage", "회원가입하는데 실패했습니다.");
+			result.put("errorMessage", "회원가입 하는데 실패했습니다.");
 		} else {
 			result.put("code", 200);
-			result.put("result", "성공");			
+			result.put("result", "성공");
 		}
+		
 		return result; // json
 	}
+	
 	/**
 	 * 로그인 API
 	 * @param loginId
@@ -94,21 +96,17 @@ public class UserRestController {
 	public Map<String, Object> signIn(
 			@RequestParam("loginId") String loginId,
 			@RequestParam("password") String password,
-			HttpServletRequest request){
+			HttpServletRequest request) {
 		
-	}
-		
-		//비밀번호 hashing
+		// 비밀번호 hashing
 		String hashedPassword = EncryptUtils.md5(password);
+		
+		// db 조회 (loginId, 해싱된 비밀번호)   => null or 있음
+		UserEntity user = userBO.getUserEntityByLoginIdPassword(loginId, hashedPassword);
 
-		//db 조회 (loginId, 해싱된 비밀번호)  => null or 있음
-		UserEntity user = userBO.getUserEntityByLoginIdPassword()
-		
-		
 		// 응답값
 		Map<String, Object> result = new HashMap<>();
-		
-		if(user != null) {
+		if (user != null) {
 			// 로그인 처리
 			HttpSession session = request.getSession();
 			session.setAttribute("userId", user.getId());
@@ -117,16 +115,12 @@ public class UserRestController {
 			
 			result.put("code", 200);
 			result.put("result", "성공");
-			
-		}else {
-			//로그인 불가
+		} else {
+			// 로그인 불가
 			result.put("code", 500);
 			result.put("errorMessage", "존재하지 않는 사용자 입니다.");
 		}
 		
-		result.put("code", 200);
-		result.put("code", "성공");
 		return result;
-		
 	}
 }

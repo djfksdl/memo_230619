@@ -12,9 +12,16 @@ import com.memo.post.mapper.PostMapper;
 public class PostBO {
 	@Autowired
 	private PostMapper postMapper;
-	
-	//input: userId   output : List<Post>
-	public List<Post> getPostListByUserId(int userId){
-		return postMapper.selectPostList
+
+	// input:userId   output:List<Post>
+	public List<Post> getPostListByUserId(int userId) {
+		return postMapper.selectPostListByUserId(userId);
+	}
+	// input : 파라미터들  output: x
+	public void addPost(int userId, String subject , String content) {
+		String imagePath = null;
+		// TODO : 이미지가 있으면 업로드
+		
+		postMapper.insertPost(userId, subject, content, imagePath);
 	}
 }
