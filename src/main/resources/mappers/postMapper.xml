@@ -40,13 +40,12 @@
 		)
 		VALUES
 		(
-		#{userId}
-		,#{subject}
-		,#{content}
-		,#{imagePath}
-		, NOW()
-		, NOW()
+			#{userId}
+			, #{subject}
+			, #{content}
+			, #{imagePath}
+			, NOW()
+			, NOW()
 		)
-		
 	</insert>
 </mapper>
