@@ -23,6 +23,11 @@ public class PostBO {
 		return postMapper.selectPostListByUserId(userId);
 	}
 	
+	// input: postId, userId  output:Post
+	public Post getPostByPostIdUserId(int postId, int userId) {
+		return postMapper.selectPostByPostIdUserId(postId, userId);
+	}
+	
 	// input:파라미터들   output:X
 	public void addPost(int userId, String userLoginId, 
 			String subject, String content, 

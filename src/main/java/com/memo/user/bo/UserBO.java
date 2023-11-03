@@ -35,4 +35,6 @@ public class UserBO {
 		
 		return userEntity == null ? null : userEntity.getId();
 	}
+	
+	//input: postId  output: X
 }
