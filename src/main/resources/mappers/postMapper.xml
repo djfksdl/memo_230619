@@ -25,7 +25,33 @@
 			`post`
 		WHERE
 			`userId` = #{userId}
-		ORDER BY `id` DESC
+			<if test="direction == 'next'">
+			<![CDATA[
+			AND `id` < #{standardId}
+			]]>
+			ORDER BY `id` DESC
+			</if>
+			<if test="direction == 'prev'">
+			<![CDATA[
+			AND `id` > #{standardId}
+			]]>
+			ORDER BY `id` ASC
+			</if>
+			<if test="direction == null">
+			ORDER BY `id` DESC
+			</if>
+		LIMIT ${limit}
+	</select>
+	
+	<select id="selectPostIdByUserIdAndSort" parameterType="map" resultType="int">
+		SELECT
+			`id`
+		FROM
+			`post`
+		WHERE
+			`userId` = #{userId}
+		ORDER BY `id` ${sort}
+		LIMIT 1
 	</select>
 	
 	<select id="selectPostByPostIdUserId" parameterType="map" resultType="com.memo.post.domain.Post">
@@ -64,4 +90,28 @@
 			, NOW()
 		)
 	</insert>
+	
+	<update id="updatePostByPostIdUserId" parameterType="map">
+		UPDATE `post`
+		SET
+			`subject` = #{subject}
+			, `content` = #{content}
+			<!-- imagePath가 있을 때만 수정 -->
+			<if test="imagePath != null">
+			, `imagePath` = #{imagePath}	
+			</if> 
+			, `updatedAt` = NOW()
+		WHERE
+			`id` = #{postId}
+			AND `userId` = #{userId}
+	</update>
+	
+	<delete id="deletePostByPostIdUserId" parameterType="map">
+		DELETE
+		FROM
+			`post`
+		WHERE
+			`id` = #{postId}
+			AND `userId` = #{userId}
+	</delete>
 </mapper>

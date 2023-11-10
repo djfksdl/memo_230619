@@ -20,11 +20,11 @@
 		</div>
 		
 		<div class="d-flex justify-content-between">
-			<button type="button" id="deleteBtn" class="btn btn-secondary">삭제</button>
+			<button type="button" id="deleteBtn" class="btn btn-secondary" data-post-id="${post.id}">삭제</button>
 			
 			<div>
 				<a href="/post/post-list-view" class="btn btn-dark">목록</a>
-				<button type="button" id="saveBtn" class="btn btn-warning">수정</button>
+				<button type="button" id="saveBtn" class="btn btn-warning" data-post-id="${post.id}">수정</button>
 			</div>
 		</div>
 	</div>
@@ -34,9 +34,11 @@ $(document).ready(function() {
 	// 글 수정 버튼
 	$('#saveBtn').on('click', function() {
 		//alert("수정 버튼");
+		let postId = $(this).data("post-id");
 		let subject = $('#subject').val().trim();
 		let content = $('#content').val();
 		let fileName = $("#file").val(); // C:\fakepath\songbird-8348139_1280.png
+		//alert(postId);
 		
 		// validation check
 		if (!subject) {
@@ -67,6 +69,7 @@ $(document).ready(function() {
 		// request param 구성
 		// 이미지를 업로드 할 때는 반드시 form 태그가 있어야 한다.
 		let formData = new FormData();
+		formData.append("postId", postId);
 		formData.append("subject", subject); // key는 form 태그의 name 속성과 같고 Request parameter명이 된다.
 		formData.append("content", content);
 		formData.append("file", $('#file')[0].files[0]);
@@ -92,6 +95,32 @@ $(document).ready(function() {
 			}
 			, error:function(request, status, error) {
 				alert("글을 저장하는데 실패했습니다.");
+			}
+		});
+	});
+	
+	// 글 삭제
+	$("#deleteBtn").on("click", function() {
+		let postId = $(this).data("post-id");
+		//alert(postId);
+		
+		$.ajax({
+			// request
+			type:"DELETE"
+			, url:"/post/delete"
+			, data:{"postId":postId}
+			
+			// response
+			, success:function(data) {
+				if (data.code == 200) {
+					alert("글이 삭제 되었습니다.");
+					location.href = "/post/post-list-view";
+				} else {
+					alert(data.errorMessage);
+				}
+			}
+			, error:function(request, status, error) {
+				alert("삭제 하는데 실패했습니다.");
 			}
 		});
 	});
